@@ -1,6 +1,7 @@
 package figures
 
 class LFigure: BaseFigure() {
+    override val id: Int = 3
     init {
         points.addElement(Point(0, 0))
         points.addElement(Point(0, 1))

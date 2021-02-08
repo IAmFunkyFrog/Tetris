@@ -3,6 +3,7 @@ package figures
 import java.util.Vector
 
 open class BaseFigure: Cloneable {
+    protected open val id: Int = 0
     protected var points: Vector<Point> = Vector()
 
     fun getRotateRight(): Vector<Point> {
