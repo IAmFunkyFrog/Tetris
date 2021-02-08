@@ -1,3 +1,5 @@
+package figures
+
 class FigureFabric {
 
 }
