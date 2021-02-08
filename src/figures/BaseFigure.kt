@@ -2,12 +2,8 @@ package figures
 
 import java.util.Vector
 
-open class BaseFigure {
-    private var points: Vector<Point> = Vector()
-
-    init {
-        points.addElement(Point(0, 0))
-    }
+open class BaseFigure: Cloneable {
+    protected var points: Vector<Point> = Vector()
 
     fun getRotateRight(): Vector<Point> {
         val newPoints: Vector<Point> = points
@@ -55,8 +51,13 @@ open class BaseFigure {
 
     fun MoveTo(point: Point) {
         for(i in points.indices) {
-            points[i].x += point.x;
-            points[i].y += point.y;
+            points[i].x += point.x
+            points[i].y += point.y
         }
     }
+
+    public override fun clone(): Any {
+        return super.clone()
+    }
 }
+
