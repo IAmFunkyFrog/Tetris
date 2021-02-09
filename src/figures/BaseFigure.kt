@@ -14,9 +14,9 @@ open class BaseFigure(var id: Int = 0): Cloneable {
 
     fun getRotateRight(): ArrayList<Point> {
         val newPoints: ArrayList<Point> = copyPointsArrayList(points)
-        val basePoint: Point = points[0]
+        val basePoint: Point = newPoints[0]
         for(i in newPoints.indices) {
-            val beforeRotationPoint: Point = newPoints[i]
+            val beforeRotationPoint: Point = newPoints[i].copy()
             newPoints[i].x = beforeRotationPoint.y - basePoint.y + basePoint.x
             newPoints[i].y = -beforeRotationPoint.x + basePoint.y + basePoint.x
         }
@@ -25,9 +25,9 @@ open class BaseFigure(var id: Int = 0): Cloneable {
 
     fun getRotateLeft(): ArrayList<Point> {
         val newPoints: ArrayList<Point> = copyPointsArrayList(points)
-        val basePoint: Point = points[0]
+        val basePoint: Point = newPoints[0]
         for(i in newPoints.indices) {
-            val beforeRotationPoint: Point = newPoints[i]
+            val beforeRotationPoint: Point = newPoints[i].copy()
             newPoints[i].x = -beforeRotationPoint.y + basePoint.y + basePoint.x
             newPoints[i].y = beforeRotationPoint.x + basePoint.y - basePoint.x
         }
