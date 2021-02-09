@@ -56,7 +56,8 @@ open class BaseFigure(var id: Int = 0): Cloneable {
         this.points = points
     }
 
-    fun MoveTo(point: Point) {
+    fun moveTo(point: Point) {
+        print("Moving to $point")
         for(i in points.indices) {
             points[i].x += point.x
             points[i].y += point.y
@@ -64,6 +65,8 @@ open class BaseFigure(var id: Int = 0): Cloneable {
     }
 
     public override fun clone(): Any {
-        return super.clone()
+        val copied: BaseFigure = BaseFigure(id)
+        copied.setMove(copyPointsArrayList(points))
+        return copied as Any
     }
 }
