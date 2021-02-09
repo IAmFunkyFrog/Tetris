@@ -1,13 +1,19 @@
 package figures
 
-import java.util.Vector
+import java.util.ArrayList
 
 open class BaseFigure(var id: Int = 0): Cloneable {
-    var points: Vector<Point> = Vector()
+    var points: ArrayList<Point> = ArrayList()
         protected set
 
-    fun getRotateRight(): Vector<Point> {
-        val newPoints: Vector<Point> = points
+    private fun copyPointsArrayList(points: ArrayList<Point>): ArrayList<Point> {
+        val copied: ArrayList<Point> = ArrayList()
+        for(point in points) copied.add(Point(point.x, point.y))
+        return copied
+    }
+
+    fun getRotateRight(): ArrayList<Point> {
+        val newPoints: ArrayList<Point> = copyPointsArrayList(points)
         val basePoint: Point = points[0]
         for(i in newPoints.indices) {
             val beforeRotationPoint: Point = newPoints[i]
@@ -17,8 +23,8 @@ open class BaseFigure(var id: Int = 0): Cloneable {
         return newPoints
     }
 
-    fun getRotateLeft(): Vector<Point> {
-        val newPoints: Vector<Point> = points
+    fun getRotateLeft(): ArrayList<Point> {
+        val newPoints: ArrayList<Point> = copyPointsArrayList(points)
         val basePoint: Point = points[0]
         for(i in newPoints.indices) {
             val beforeRotationPoint: Point = newPoints[i]
@@ -28,25 +34,25 @@ open class BaseFigure(var id: Int = 0): Cloneable {
         return newPoints
     }
 
-    fun getMoveRight(): Vector<Point> {
-        val newPoints: Vector<Point> = Vector(points)
+    fun getMoveRight(): ArrayList<Point> {
+        val newPoints: ArrayList<Point> = copyPointsArrayList(points)
         for(i in newPoints.indices) newPoints[i].x += 1
         return newPoints
     }
 
-    fun getMoveLeft(): Vector<Point> {
-        val newPoints: Vector<Point> = Vector(points)
+    fun getMoveLeft(): ArrayList<Point> {
+        val newPoints: ArrayList<Point> = copyPointsArrayList(points)
         for(i in newPoints.indices) newPoints[i].x -= 1
         return newPoints
     }
 
-    fun getMoveDown(): Vector<Point> {
-        val newPoints: Vector<Point> = Vector(points)
+    fun getMoveDown(): ArrayList<Point> {
+        val newPoints: ArrayList<Point> = copyPointsArrayList(points)
         for(i in newPoints.indices) newPoints[i].y -= 1
         return newPoints
     }
 
-    fun setMove(points: Vector<Point>) {
+    fun setMove(points: ArrayList<Point>) {
         this.points = points
     }
 
@@ -61,4 +67,3 @@ open class BaseFigure(var id: Int = 0): Cloneable {
         return super.clone()
     }
 }
-
