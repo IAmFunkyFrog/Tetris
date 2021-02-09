@@ -4,12 +4,11 @@ import java.util.*
 class Game(private val width: Int, private val height: Int) {
     private val figureFabric: FigureFabric = FigureFabric()
     private var currentFigure: BaseFigure? = null
-    private val spawn: Point = Point(width / 2, height - 4)
     val table: Array<Array<Int>> = Array(height) { Array(width) { 0 } }
     var inProcess: Boolean = false
         private set
 
-    private fun checkValidFigureCoords(figureCoords: Vector<Point>): Boolean {
+    private fun checkValidFigureCoords(figureCoords: ArrayList<Point>): Boolean {
         var flag: Boolean = true
         for(point in figureCoords) {
             if(point.x < 0 || point.x >= width) {
@@ -28,20 +27,28 @@ class Game(private val width: Int, private val height: Int) {
         return flag
     }
 
-    private fun setCurrentFigureOnTable() {
-        if(currentFigure != null && checkValidFigureCoords(currentFigure!!.points)) {
-            for(point in currentFigure!!.points) table[point.y][point.x] = currentFigure!!.id
+    private fun setFigureOnTable(figure: BaseFigure) {
+        if(checkValidFigureCoords(figure.points)) {
+            for(point in figure.points) table[point.y][point.x] = figure.id
+        }
+    }
+
+    private fun deleteFigureFromTable(figure: BaseFigure) {
+        for (i in table.indices) {
+            for (j in table[i].indices) {
+                if (table[i][j] == figure.id) table[i][j] = 0
+            }
         }
     }
     //Метод возвращает вектор с высотами линий, в которых сложился тетрис
-    private fun checkTetris(): Vector<Int> {
-        val lines: Vector<Int> = Vector()
+    private fun checkTetris(): ArrayList<Int> {
+        val lines: ArrayList<Int> = ArrayList()
         for(i in table.indices) {
             var flag: Boolean = true
             for(j in table[i].indices) {
                 if(table[i][j] == 0) flag = false
             }
-            if(flag) lines.addElement(i)
+            if(flag) lines.add(i)
         }
         return lines
     }
@@ -59,14 +66,19 @@ class Game(private val width: Int, private val height: Int) {
         }
     }
 
+    private fun spawnFigure(): BaseFigure {
+        val figure = figureFabric.getRandomFigure()
+        figure.moveTo(Point(width / 2 - 2, height - 5))
+        return figure
+    }
+
     fun restart() {
         for(i in table.indices) {
             for(j in table[i].indices) {
                 table[i][j] = 0
             }
         }
-        currentFigure = figureFabric.getRandomFigure()
-        currentFigure!!.MoveTo(spawn)
+        currentFigure = spawnFigure()
         inProcess = true
     }
 
@@ -74,37 +86,44 @@ class Game(private val width: Int, private val height: Int) {
         if(!inProcess) return
 
         if(currentFigure == null) {
-            currentFigure = figureFabric.getRandomFigure()
-            currentFigure?.MoveTo(spawn)
+            currentFigure = spawnFigure()
             if(!checkValidFigureCoords(currentFigure!!.points)) {
                 inProcess = false
+                return
             }
         }
+        else {
+            deleteFigureFromTable(currentFigure!!)
 
-        setCurrentFigureOnTable()
-
-        val newFigureCoords: Vector<Point> = currentFigure!!.getMoveDown()
-        if(checkValidFigureCoords(newFigureCoords)) currentFigure!!.setMove(newFigureCoords)
-        else currentFigure = null
+            val newFigureCoords: ArrayList<Point> = currentFigure!!.getMoveDown()
+            if(checkValidFigureCoords(newFigureCoords)) {
+                currentFigure!!.setMove(newFigureCoords)
+                setFigureOnTable(currentFigure!!)
+            }
+            else {
+                setFigureOnTable(currentFigure!!)
+                currentFigure = null
+            }
+        }
     }
 
     fun figureRotateRight() {
         if(currentFigure != null) {
-            val newFigureCoords: Vector<Point> = currentFigure!!.getRotateRight()
+            val newFigureCoords: ArrayList<Point> = currentFigure!!.getRotateRight()
             if(checkValidFigureCoords(newFigureCoords)) currentFigure!!.setMove(newFigureCoords)
         }
     }
 
     fun figureRotateLeft() {
         if(currentFigure != null) {
-            val newFigureCoords: Vector<Point> = currentFigure!!.getRotateLeft()
+            val newFigureCoords: ArrayList<Point> = currentFigure!!.getRotateLeft()
             if (checkValidFigureCoords(newFigureCoords)) currentFigure!!.setMove(newFigureCoords)
         }
     }
 
     fun figureMoveRight() {
         if(currentFigure != null) {
-            val newFigureCoords: Vector<Point> = currentFigure!!.getMoveRight()
+            val newFigureCoords: ArrayList<Point> = currentFigure!!.getMoveRight()
             if (checkValidFigureCoords(newFigureCoords)) currentFigure!!.setMove(newFigureCoords)
         }
 
@@ -112,7 +131,7 @@ class Game(private val width: Int, private val height: Int) {
 
     fun figureMoveLeft() {
         if(currentFigure != null) {
-            val newFigureCoords: Vector<Point> = currentFigure!!.getMoveLeft()
+            val newFigureCoords: ArrayList<Point> = currentFigure!!.getMoveLeft()
             if (checkValidFigureCoords(newFigureCoords)) currentFigure!!.setMove(newFigureCoords)
         }
     }
