@@ -2,8 +2,7 @@ package figures
 
 import java.util.Vector
 
-open class BaseFigure: Cloneable {
-    open val id: Int = 0
+open class BaseFigure(var id: Int = 0): Cloneable {
     var points: Vector<Point> = Vector()
         protected set
 
