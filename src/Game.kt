@@ -42,15 +42,15 @@ class Game(private val width: Int, private val height: Int) {
     }
     //Метод возвращает вектор с высотами линий, в которых сложился тетрис
     private fun checkTetris(): ArrayList<Int> {
-        val lines: ArrayList<Int> = ArrayList()
+        val rows: ArrayList<Int> = ArrayList()
         for(i in table.indices) {
             var flag: Boolean = true
             for(j in table[i].indices) {
                 if(table[i][j] == 0) flag = false
             }
-            if(flag) lines.add(i)
+            if(flag) rows.add(i)
         }
-        return lines
+        return rows
     }
 
     private fun deleteRow(rowHeight: Int) {
@@ -85,55 +85,76 @@ class Game(private val width: Int, private val height: Int) {
     fun tick() {
         if(!inProcess) return
 
-        if(currentFigure == null) {
+        if(!figureMoveDown()) {
             currentFigure = spawnFigure()
             if(!checkValidFigureCoords(currentFigure!!.points)) {
                 inProcess = false
                 return
             }
         }
-        else {
-            deleteFigureFromTable(currentFigure!!)
 
-            val newFigureCoords: ArrayList<Point> = currentFigure!!.getMoveDown()
-            if(checkValidFigureCoords(newFigureCoords)) {
-                currentFigure!!.setMove(newFigureCoords)
-                setFigureOnTable(currentFigure!!)
-            }
-            else {
-                setFigureOnTable(currentFigure!!)
-                currentFigure = null
-            }
-        }
+        val tetrisRows: ArrayList<Int> = checkTetris()
+        for(rowIndex in tetrisRows) deleteRow(rowIndex)
     }
 
-    fun figureRotateRight() {
-        if(currentFigure != null) {
-            val newFigureCoords: ArrayList<Point> = currentFigure!!.getRotateRight()
-            if(checkValidFigureCoords(newFigureCoords)) currentFigure!!.setMove(newFigureCoords)
-        }
+    fun figureRotateRight(): Boolean {
+        if(currentFigure == null) return false
+
+        deleteFigureFromTable(currentFigure!!)
+        val newFigureCoords: ArrayList<Point> = currentFigure!!.getRotateRight()
+        val flag: Boolean = checkValidFigureCoords(newFigureCoords)
+        if(flag) currentFigure!!.setMove(newFigureCoords)
+        setFigureOnTable(currentFigure!!)
+
+        return flag
     }
 
-    fun figureRotateLeft() {
-        if(currentFigure != null) {
-            val newFigureCoords: ArrayList<Point> = currentFigure!!.getRotateLeft()
-            if (checkValidFigureCoords(newFigureCoords)) currentFigure!!.setMove(newFigureCoords)
-        }
+    fun figureRotateLeft(): Boolean {
+        if(currentFigure == null) return false
+
+        deleteFigureFromTable(currentFigure!!)
+        val newFigureCoords: ArrayList<Point> = currentFigure!!.getRotateLeft()
+        val flag: Boolean = checkValidFigureCoords(newFigureCoords)
+        if(flag) currentFigure!!.setMove(newFigureCoords)
+        setFigureOnTable(currentFigure!!)
+
+        return flag
     }
 
-    fun figureMoveRight() {
-        if(currentFigure != null) {
-            val newFigureCoords: ArrayList<Point> = currentFigure!!.getMoveRight()
-            if (checkValidFigureCoords(newFigureCoords)) currentFigure!!.setMove(newFigureCoords)
-        }
+    fun figureMoveRight(): Boolean {
+        if(currentFigure == null) return false
 
+        deleteFigureFromTable(currentFigure!!)
+        val newFigureCoords: ArrayList<Point> = currentFigure!!.getMoveRight()
+        val flag: Boolean = checkValidFigureCoords(newFigureCoords)
+        if(flag) currentFigure!!.setMove(newFigureCoords)
+        setFigureOnTable(currentFigure!!)
+
+        return flag
     }
 
-    fun figureMoveLeft() {
-        if(currentFigure != null) {
-            val newFigureCoords: ArrayList<Point> = currentFigure!!.getMoveLeft()
-            if (checkValidFigureCoords(newFigureCoords)) currentFigure!!.setMove(newFigureCoords)
-        }
+    fun figureMoveLeft(): Boolean {
+        if(currentFigure == null) return false
+
+        deleteFigureFromTable(currentFigure!!)
+        val newFigureCoords: ArrayList<Point> = currentFigure!!.getMoveLeft()
+        val flag: Boolean = checkValidFigureCoords(newFigureCoords)
+        if(flag) currentFigure!!.setMove(newFigureCoords)
+        setFigureOnTable(currentFigure!!)
+
+        return flag
+    }
+
+    fun figureMoveDown(): Boolean {
+        if(currentFigure == null) return false
+
+        deleteFigureFromTable(currentFigure!!)
+        val newFigureCoords: ArrayList<Point> = currentFigure!!.getMoveDown()
+        val flag: Boolean = checkValidFigureCoords(newFigureCoords)
+        if(flag) currentFigure!!.setMove(newFigureCoords)
+        setFigureOnTable(currentFigure!!)
+
+        return flag
     }
 
 }
