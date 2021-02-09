@@ -57,7 +57,6 @@ open class BaseFigure(var id: Int = 0): Cloneable {
     }
 
     fun moveTo(point: Point) {
-        print("Moving to $point")
         for(i in points.indices) {
             points[i].x += point.x
             points[i].y += point.y
